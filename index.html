@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Giftastic</title>
+
+</head>
+<body>
+<button data-search="Plants">Plants</button>
+<button data-search="Cats">Cats</button>
+<button data-search="Dogs">Dogs</button>
+<button data-search="Lions">Lions</button>
+<button data-search="Tigers">Tigers</button>
+<button data-search="Bears">Bears</button>
+<button data-search="Jello">Jello</button>
+<button data-search="Beyonce">Beyoncé</button>
+
+<div id="GIF"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+$("button").on("click", function(){
+	
+
+	var x = $(this).data("search")
+
+	var queryURL = "https://api.giphy.com/v1/gifs/search?q="+x+"&api_key=hnaxY5qlVNsLbWQPSg1rHBP8qJhm8YQm&limit=10"
+	console.log(x);
+	console.log(queryURL);
+
+	$.ajax({url:queryURL,method:'GET'})
+		.done(function(response){
+			for (var i = 0; i<response.data.length; i++){
+				$('#GIF').prepend("<p> Rating: " + response.data[i].rating+"</p>")
+				$('#GIF').prepend("<img src ='"+response.data[i].images.downsized.url+"'>")
+			}
+			
+		
+
+
+	});
+
+});
+
+
+</script>
+</body>
+
+
+</html>
