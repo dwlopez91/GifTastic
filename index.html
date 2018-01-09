@@ -5,63 +5,80 @@
 
 </head>
 <body>
-<button data-search="Plants">Plants</button>
-<button data-search="Cats">Cats</button>
-<button data-search="Dogs">Dogs</button>
-<button data-search="Lions">Lions</button>
-<button data-search="Tigers">Tigers</button>
-<button data-search="Bears">Bears</button>
-<button data-search="Jello">Jello</button>
-<button data-search="Beyonce">Beyoncé</button>
 
-<div>
-	<form id="addButton">
-	  Add a Button:<br>
-	  <input type="text" name="addButton" value=""><br>
-	  <input type="submit" value="Submit">
+	<div id="GIF"></div>
+	<div id="GIF-view"></div>
+
+	<form id="GIF-form">
+		<label for="GIF-input">Add a GIF</label>
+		<input type="text" id="GIF-input"><br>
+		<input id="add-GIF" type="submit" value="submit">
 	</form>
-</div>
 
-<div id="GIF"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
+	var topics = ["Plants", "Cats", "Dogs", "Lions", "Tigers", "Bears", "Jello", "Beyonce"];
 
-var topics = ["Plants", "Cats", "Dogs", "Lions", "Tigers", "Bears", "Jello", "Beyonce"];
-topics.push($("#addbutton").val(""))
+	function renderButtons() {
 
+		$("#GIF").empty();
 
+		for (var i = 0; i < topics.length; i++) {
 
-$("button").on("click", function(){
+			var addTopic = $("<button>");
+			addTopic.addClass("topics");
+			addTopic.attr("data-name", topics[i]);
+			addTopic.text(topics[i]);
+			$("#GIF-view").append(addTopic);
+		}
+	}
 
-	var x = $(this).data("search")
+	$("#add-GIF").on("click", function(event) {
+		event.preventDefault();
 
-	var queryURL = "https://api.giphy.com/v1/gifs/search?q="+x+"&api_key=hnaxY5qlVNsLbWQPSg1rHBP8qJhm8YQm&limit=10"
-	console.log(x);
-	console.log(queryURL);
+		var GIF = $("#GIF-input").val().trim();
+		topics.push(GIF);
+		renderButtons();
+	});
 
-	$.ajax({url:queryURL,method:'GET'})
+	renderButtons();
+
+	var still;
+
+	$("button").on("click", function(){
+
+		var search = $(this).data("name")
+
+		var queryURL = "https://api.giphy.com/v1/gifs/search?q="+search+"&api_key=hnaxY5qlVNsLbWQPSg1rHBP8qJhm8YQm&limit=10"
+
+		$.ajax({url:queryURL,method:'GET'})
 		.done(function(response){
 
 			for (var i = 0; i<response.data.length; i++){
 				$('#GIF').prepend("<p> Rating: " + response.data[i].rating+"</p>")
-				var still = $('#GIF').prepend("<img src ='"+response.data[i].images.downsized_still.url+"'>")
-
-				// $("still").on("click", function(animate){
-				// still = $('#GIF').prepend("<img src ='"+response.data[i].images.downsized.url+"'>");
-
-				// });
+				var still = $("<img>");
+				still.addClass("switch")
+				still.attr("data-state", "still");
+				still.attr("src", response.data[i].images.downsized_still.url);
+				$('#GIF').prepend(still);
 			}
-	 
+		
+		});
+		
+		$(document).on("click", ".switch", function(){
+			var state = $(this).attr("data-state")
+			console.log(state)
+			if (state==="still") {
+				$(this).attr("data-state", "animate")	
+			} else {
+				$(this).attr("data-state", "still")
+			}
+
+		});
 	});
-
-});
-
-
 
 
 </script>
 </body>
-
-
 </html>
