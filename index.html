@@ -14,14 +14,25 @@
 <button data-search="Jello">Jello</button>
 <button data-search="Beyonce">Beyoncé</button>
 
+<div>
+	<form id="addButton">
+	  Add a Button:<br>
+	  <input type="text" name="addButton" value=""><br>
+	  <input type="submit" value="Submit">
+	</form>
+</div>
+
 <div id="GIF"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
+var topics = ["Plants", "Cats", "Dogs", "Lions", "Tigers", "Bears", "Jello", "Beyonce"];
+topics.push($("#addbutton").val(""))
+
+
 
 $("button").on("click", function(){
-	
 
 	var x = $(this).data("search")
 
@@ -31,17 +42,22 @@ $("button").on("click", function(){
 
 	$.ajax({url:queryURL,method:'GET'})
 		.done(function(response){
+
 			for (var i = 0; i<response.data.length; i++){
 				$('#GIF').prepend("<p> Rating: " + response.data[i].rating+"</p>")
-				$('#GIF').prepend("<img src ='"+response.data[i].images.downsized.url+"'>")
+				var still = $('#GIF').prepend("<img src ='"+response.data[i].images.downsized_still.url+"'>")
+
+				// $("still").on("click", function(animate){
+				// still = $('#GIF').prepend("<img src ='"+response.data[i].images.downsized.url+"'>");
+
+				// });
 			}
-			
-		
-
-
+	 
 	});
 
 });
+
+
 
 
 </script>
